@@ -1,0 +1,50 @@
+<!DOCTYPE html >
+
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}
+      <link rel="stylesheet" type="text/css"  media="screen, projection" href="{{ MEDIA_URL }}santa.css" />
+      <!--[if IE]>
+        <link rel="stylesheet" type="text/css" media="screen, projection" href="{{ MEDIA_URL }}ie.css">
+      <![endif]-->
+    {% endblock %}
+      <script type="text/javascript" src="{{ MEDIA_URL}}jquery.js"></script>
+      <script type="text/javascript" src="{{ MEDIA_URL}}jquery-ui.js"></script>
+    {% block js %}
+      <script type="text/javascript" src="{{ MEDIA_URL}}santa.js"></script>
+    {% endblock %}
+
+    {% block extra-head %}{% endblock %}
+  </head>
+
+  <body>
+    {% block header %}
+	<div class="login-header">	
+		{% if user.is_authenticated %}
+			{{ user.email }} <a href="{% url logout %}">log out?</a>
+		{% endif %}	
+		{% if not user.is_authenticated %}
+			<a href="{% url login %}?next={{path}}">log in</a>
+		{% endif %}
+	</div>
+    {% endblock %}
+    <div id="content" class="container">
+      {% block content %}{% endblock %}
+    </div>
+    <div id="footer">
+	{% block footer %}
+		<div class="footer-links">
+			<a href="{% url home %}">Home</a> | 	
+			<a href="{% url about %}">About</a> | 
+			<a href="{% url request-invite %}">Request Invite</a> |
+			<a href="{% url privacy %}">Privacy Policy</a> |
+			<a href="{% url support %}">Support</a>
+		</div>
+		<div class="credits">
+			Secret Santa &rsquo;09. By <a href="http://padbury.net">Robert Padbury</a> and <a href="http://mkrieger.org">Mike Krieger</a>
+	
+	{% endblock %}
+    </div>
+  </body>
+</html>

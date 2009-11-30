@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block header %}
+<div class="login-header">
+	&nbsp;
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="">
+	<ul class="form">
+		<li><label>Email</label></li>
+		<li>{{ form.username }}</li>
+		<li>{{ form.password.label_tag }}</li>
+		<li>{{ form.password }}</li>
+		{{ form.next }}
+		<li><input type="submit" value="Log in" /></li>
+	</ul>
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}

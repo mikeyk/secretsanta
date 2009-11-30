@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "leftcolumnsanta.html" %}
+
+<div class="rightcolumn">
+	To request an invite and start your own Secret Santa group, enter your e-mail below; you'll receive an invite code in your email:
+	<form method="POST" action="">
+	<ul class="form">
+		{{ form.as_ul }}
+		<li><input type="submit" value="Request"/></li>
+	</ul>
+	</form>
+</div>
+
+{% endblock %}

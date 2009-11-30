@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>
+	Thanks! An invitation email has been sent to {{ email }}.
+</p>
+<p>
+	You can click the link in your email to get started, or enter the invite code you receive in the box below:
+	<form method="POST" action="">
+		<ul class="form">
+		{{ form.as_ul }}
+		<input type="submit" value="Get started"/>
+		</ul>
+	</form>
+</p>
+{% endblock %}

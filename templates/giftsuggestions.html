@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+	<script>
+	$(document).ready(function(){
+		
+		var container = $("div.products-wrapper");
+		var ul = $("ul.products");
+
+		var itemsWidth = ul.innerWidth() - container.outerWidth() + 20;
+		$('.slider').slider({
+			min: 0,
+			max: itemsWidth,
+			stop: function (event, ui) {
+				ul.animate({'left' : ui.value * -1}, 500);
+			},
+			slide: function (event, ui) {
+				ul.css('left', ui.value * -1);
+			}
+		});
+
+		var defaultString = "Hover over a product to see a description; click on a product to see that product on Etsy";
+		$("li.product-result").hover(function(event){
+			$(".info").html($(".product-description", $(event.currentTarget) ).html());
+		}, function(){
+			$(".info").html("");
+		}).click(function(event){
+			window.open($(".product-url", event.currentTarget).text());
+		})
+		
+		$(".info").html(defaultString);
+		
+	})
+	</script>
+{% endblock %}
+
+{% block content %}
+
+	<h2>Gift suggestions for &ldquo;{{keyword}}&rdquo;</h2>
+	<div class="products-wrapper">
+	<ul class="products">
+	{% for result in results %}
+	<li class="product-result">
+			<img src="{{ result.image_url_155x125 }}"/>
+			<div class="product-url">{{ result.url }}</div>
+			<div class="product-description">{{ result.title }}</div>
+	</li>
+	{% endfor %}
+	</ul>
+	<div class="rightfadeout"></div>
+	<div class="leftfadeout"></div>
+	<div class="info"></div>
+	</div>
+	<div class="slider"></div>
+{% endblock %}

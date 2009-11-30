@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<p>It looks like we've already sent you an invite code. To resend it, enter the word below to prove you're human:</p>
+	<p>{{ word }}</p>
+	<p> {{ form.errors }}</p>
+	<form method="POST" action="">
+		<ul class="form">
+		<li>{{ form.notrobot }}</li>
+		{{ form.wordindex }}
+		<li><input type="submit" value="Resend"/></li>
+		</ul>
+	</form>
+{% endblock %}

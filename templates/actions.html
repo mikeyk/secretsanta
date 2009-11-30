@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<p>There are <span class="datecounter">{{ days }}</span> days until we send Secret Santa matches.</p>
+
+	<a href="{% url invite-friends %}">Invite more friends</a>
+{% endblock %}

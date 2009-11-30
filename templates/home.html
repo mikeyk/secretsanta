@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		$("#id_email")[0].focus();
+	})
+	</script>
+{% endblock %}
+
+{% block content %}
+
+{% include "leftcolumnsanta.html" %}
+
+<div class="rightcolumn">
+	<form action="" method="POST">
+		<ul id="startform" class="form">
+		{{ startform.as_ul }}
+		<li>
+			or <a href="{% url request-invite %}">Request an invite</a>
+			
+		<li>
+			<input type="submit" value="Go">
+		</li>
+		</ul>
+	</form>
+</div>
+
+{% endblock %}
