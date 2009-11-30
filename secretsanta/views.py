@@ -173,7 +173,7 @@ def resend_invite(request):
 			index = int(form.cleaned_data['wordindex'])
 			if words[index] == form.cleaned_data['notrobot']:
 				email_lookup = InvitationCode.objects.get(email=request.session['email'], requester=None)
-				url = "http://localhost:8000/create?i=%s" % (email_lookup.code)
+				url = "http://%s/create?i=%s" % (request.get_host(), email_lookup.code)
 				send_mail(strings.REQUEST_INVITE_SUBJECT, strings.REQUEST_INVITE_MESSAGE % (email_lookup.code, url), settings.FROM_EMAIL,
 				    [request.session['email']], fail_silently=False)
 				return HttpResponseRedirect(reverse(confirm_request))
@@ -206,8 +206,8 @@ def request_invite(request):
 				code_obj.email = form.cleaned_data['email']
 				code_obj.save()
 				
-				# TODO final host
-				host = "localhost:8000"
+				# TODO don't hardcode 'create'
+				host = request.get_host()
 				url = "http://%s/create?i=%s" % (host, code_obj.code)
 				
 				send_mail(strings.REQUEST_INVITE_SUBJECT, strings.REQUEST_INVITE_MESSAGE % (code_obj.code, url), settings.FROM_EMAIL,
