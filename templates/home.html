@@ -14,13 +14,13 @@
 
 <div class="rightcolumn">
 	<form action="" method="POST">
-		<ul id="startform" class="form">
-		{{ startform.as_ul }}
-		<li>
-			or <a href="{% url request-invite %}">Request an invite</a>
-			
+		<ul id="startform" class="form biginputs">
+		{{ startform.as_ul }}			
 		<li>
 			<input type="submit" value="Go">
+		</li>
+		<li>
+			or <a href="{% url create %}">Start your own Secret Santa group</a>
 		</li>
 		</ul>
 	</form>

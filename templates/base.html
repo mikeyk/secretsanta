@@ -18,7 +18,7 @@
     {% block extra-head %}{% endblock %}
   </head>
 
-  <body>
+  <body class="{% block bodyclass %}{% endblock %}">
     {% block header %}
 	<div class="login-header">	
 		{% if user.is_authenticated %}
@@ -37,7 +37,7 @@
 		<div class="footer-links">
 			<a href="{% url home %}">Home</a> | 	
 			<a href="{% url about %}">About</a> | 
-			<a href="{% url request-invite %}">Request Invite</a> |
+			<a href="{% url create %}">Start your own</a> |
 			<a href="{% url privacy %}">Privacy Policy</a> |
 			<a href="{% url support %}">Support</a>
 		</div>
@@ -46,5 +46,6 @@
 	
 	{% endblock %}
     </div>
+	<script src="{{ MEDIA_URL }}modernizr-1.0.min.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

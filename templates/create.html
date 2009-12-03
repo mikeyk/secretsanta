@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "centercolumn.html" %}
 
 {% block extra-head %}
 	<script type="text/javascript" charset="utf-8">
@@ -38,8 +38,11 @@
 	
 {% endblock %}
 
-{% block content %}
-This information will only be used to tell your friends where to ship your gift to.
+{% block columncontent %}
+<div style="text-align:left">
+<h1>Information</h1>
+	This information will only be used to tell your friends where to ship your gift to.
+</div>
 <form method="POST" action="">
 <div class="centercolumn">
 	<ul id="createform" class="form">
@@ -55,7 +58,7 @@ This information will only be used to tell your friends where to ship your gift 
 		<li>{{ form.country.label_tag }} {{ form.country }} {{ form.country.errors }}</li>
 		{{ form.invite_code }}
 	</ul>
-	<input type="submit" value="Submit" />
+	<input type="submit" value="Next" />
 </div>
 </form>
 

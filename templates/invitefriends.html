@@ -1,11 +1,13 @@
-{% extends "base.html" %}
+{% extends "centercolumn.html" %}
 
-{% block content %}
-	Hi! Invite your friends!
+{% block columncontent %}
+	<div class="alignleft">
+		<h1>Invite your friends!</h1>
 	<p>
 		<a target="_blank" href="http://twitter.com/?status={{ tweet }}">tweet this to your followers</a>
 	</p>
 	<p>
 		{# TODO fix goofy red crap #}
 <a name="fb_share" type="button" share_url="{{ fb_link }}" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script> on Facebook	
+	</div>
 {% endblock %}

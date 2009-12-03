@@ -1,14 +1,15 @@
-{% extends "base.html" %}
+{% extends "centercolumn.html" %}
 
-{% block content %}
+{% block columncontent %}
+	<h1>Evil Santa Robot Detection</h1>
 	<p>It looks like we've already sent you an invite code. To resend it, enter the word below to prove you're human:</p>
-	<p>{{ word }}</p>
+	<p class="notrobotword">{{ word }}</p>
 	<p> {{ form.errors }}</p>
 	<form method="POST" action="">
-		<ul class="form">
+		<ul class="form biginputs">
 		<li>{{ form.notrobot }}</li>
 		{{ form.wordindex }}
-		<li><input type="submit" value="Resend"/></li>
+		<li class="center"><input type="submit" value="Resend"/></li>
 		</ul>
 	</form>
 {% endblock %}

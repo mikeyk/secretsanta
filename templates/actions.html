@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "centercolumn.html" %}
 
-{% block content %}
-
+{% block columncontent %}
+	<h1>Hi, {{ user.first_name }}</h1>
 	<p>There are <span class="datecounter">{{ days }}</span> days until we send Secret Santa matches.</p>
 
 	<a href="{% url invite-friends %}">Invite more friends</a>
