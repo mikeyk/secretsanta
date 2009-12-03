@@ -1,5 +1,41 @@
 /* @override http://localhost:8000/media/santa.css */
 
+/* @group Element styles */
+
+ul.errorlist {
+	padding-left: 0px;
+	list-style: none;
+}
+
+input[type=submit] {
+	border: 1px solid black;
+	background-color: #ab001b;
+	color: white;
+	width: 100px;
+	font-family: Verdana;
+	height: 30px;
+	cursor: pointer;
+	margin-top: 20px;
+	background-image: url(images/button-background.png);
+}
+
+.center {
+	text-align: center;
+}
+
+.borderradius input[type=submit] {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+.centercolumn ul.form {
+	padding-left: 0px;
+}
+
+.nolabel label {
+	display: none;
+}
+
 body {
 	background: #f5f5f5;
 	font-family: Verdana;
@@ -9,141 +45,6 @@ body {
 h2 {
 	font-weight: normal;
 	color: #AAA;
-}
-
-#content {
-	width: 800px;
-	margin: 10px auto 20px auto;
-	background: white;
-	padding: 45px;
-	border: 1px solid #CCC;
-	min-height: 410px;
-	clear: both;
-	font-size: 90%;
-}
-
-.login-header {
-	font-size: 80%;
-	width: 890px;
-	padding: 0px;
-	margin: 0px auto 0px auto;
-	text-align: right;
-}
-
-.borderradius #content {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-}
-
-.boxshadow #content {
-	-webkit-box-shadow: 1px 5px 20px #919191;
-}
-
-.leftcolumn {
-	width: 400px;
-	position: absolute;
-	min-height: 410px;
-	line-height: 100%;
-	text-align: center;
-	border-right: 1px solid rgb(193, 68, 77);	
-}
-
-.rightcolumn {
-	position: relative;
-	left: 400px;
-	min-height: 410px;
-	width: 399px;
-	float: left;
-	text-align: center;
-}
-
-label {
-	display: block;
-	font-size: 80%;
-	margin-bottom: 5px;
-}
-
-ul#startform li {
-	margin-bottom: 30px;
-}
-
-ul.form {
-	list-style-type: none;
-	text-align: left;
-	color: #d3062d;		
-}
-
-ul#startform {
-	position: absolute;
-	top: 50%;
-	margin-top: -80px;
-}
-
-ul#startform input[type=text] {
-	width: 270px;
-	height: 30px;
-	font-size: 110%;
-	border: 1px solid #777;	
-	font-family: Georgia;
-	padding: 5px;
-}
-
-ul#createform {
-	list-style-type: none;
-	padding-left: 0px;		
-}
-
-ul#createform input[type=text], ul#createform input[type=password] {
-	width: 270px;
-	height: 15px;
-	font-size: 100%;
-	border: 1px solid #777;	
-	font-family: Georgia;
-	padding: 5px;
-}
-
-ul#createform li {
-	margin-bottom: 10px;
-}
-
-ul#createform li ul.errorlist {
-	float: right;
-	list-style-type: none;
-	margin-top: 20px;
-	padding-left: 0px;
-	font-size: 90%;
-}
-
-ul#createform li ul.errorlist li {
-	padding-left: 0px;
-}
-
-.centercolumn {
-	width: 440px;
-}
-
-#santa-logo {
-	position: relative;
-	left: -20px;
-	top: 75px;
-}
-
-#footer {
-	font-size: 70%;
-	width: 800px;
-	margin: 0px auto;
-	text-align: center;
-	margin-bottom: 50px;
-}
-
-.footer-links {
-	color: #be0007;
-	margin-bottom: 1em;	
-}
-
-.footer-links a{
-	margin-right: 8px;
-	margin-left: 8px;
 }
 
 a {
@@ -168,11 +69,216 @@ a.noeffect:hover {
 	background-color: white;
 }
 
+ul.form {
+	list-style-type: none;
+	text-align: left;
+	color: #d3062d;		
+}
+
+ul.biginputs input[type=text]{
+	width: 270px;
+	height: 30px;
+	font-size: 110%;
+	border: 1px solid #777;	
+	font-family: Georgia;
+	padding: 5px;
+}
+
+label {
+	display: block;
+	font-size: 80%;
+	margin-bottom: 5px;
+	color: #3F3F3F;
+}
+
+
+/* @end */
+
+/* @group base.html styles */
+
+
+
+.login-header {
+	font-size: 80%;
+	width: 890px;
+	padding: 0px;
+	margin: 0px auto 0px auto;
+	text-align: right;
+}
+
+#content {
+	width: 800px;
+	margin: 10px auto 20px auto;
+	background: white;
+	padding: 45px;
+	border: 1px solid #CCC;
+	min-height: 410px;
+	clear: both;
+	font-size: 90%;
+}
+
+.borderradius #content {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+.boxshadow #content {
+	-webkit-box-shadow: 1px 5px 20px #919191;
+}
+
+#footer {
+	font-size: 70%;
+	width: 800px;
+	margin: 0px auto;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.footer-links {
+	color: #be0007;
+	margin-bottom: 1em;	
+}
+
+.footer-links a{
+	margin-right: 8px;
+	margin-left: 8px;
+}
+
+
+/* @end */
+
+/* @group Thin center column */
+
+.centercolumn {
+	width: 420px;
+	margin: 0px auto;
+}
+
+.centercolumn ul input[type=text] {
+	width: 420px;
+	height: 40px;
+	border: 1px solid #333;
+}
+
+.centercolumn h1 {
+	font-family: Georgia;
+	font-weight: normal;
+	color: #d40022;
+	margin-bottom: 5px;
+}
+
+.centercolumn .alignleft {
+	text-align: left;
+}
+
+
+.thin #content {
+	width: 440px;
+}
+
+.thin .login-header {
+	width: 540px;
+}
+
+
+/* @end */
+
+
+/* @group Two-column template */
+
+
+.leftcolumn {
+	width: 400px;
+	position: absolute;
+	min-height: 410px;
+	line-height: 100%;
+	text-align: center;
+	border-right: 1px solid rgb(193, 68, 77);	
+}
+
+.rightcolumn {
+	position: relative;
+	left: 400px;
+	min-height: 410px;
+	width: 399px;
+	float: left;
+	text-align: center;
+}
+
+
+/* @end */
+
+
+/* @group Create Form */
+
+ul#createform {
+	list-style-type: none;
+	padding-left: 0px;		
+}
+
+ul#createform input[type=text], ul#createform input[type=password] {
+	width: 270px;
+	height: 15px;
+	font-size: 100%;
+	border: 1px solid #777;	
+	font-family: Georgia;
+	padding: 5px;
+}
+
+ul#createform li {
+	margin-bottom: 10px;
+}
+
+ul#createform li ul.errorlist {
+	list-style-type: none;
+	padding-left: 0px;
+	font-size: 90%;
+}
+
+ul#createform li ul.errorlist li {
+	padding-left: 0px;
+}
+
+
+/* @end */
+
+/* @group Home page */
+
+#santa-logo {
+	position: relative;
+	left: -20px;
+	top: 75px;
+}
+
+ul#startform li {
+	margin-bottom: 30px;
+}
+
+
+
+ul#startform {
+	position: absolute;
+	top: 50%;
+	margin-top: -90px;
+}
+
+
+
+/* @end */
+
+
+/* @group Actions page */
+
+
 .datecounter {
 	font-weight: bold;
 }
 
-/*** Product search ***/
+
+/* @end */
+
+
+/* @group Product Search */
 
 div.products-wrapper {
 	background-color: #000;
@@ -281,3 +387,13 @@ ul.products li {
 	text-align: center;
 }
 
+/* @end */
+
+/* @group Request invite */
+
+.notrobotword {
+	color: #ff6c49;
+}
+
+
+/* @end */
