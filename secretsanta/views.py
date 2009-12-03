@@ -56,11 +56,14 @@ def create(request):
 	if request.method == "POST":
 		form = forms.PersonForm(data=request.POST)
 		if form.is_valid():
-			# look up who invited them
-			code_obj = InvitationCode.objects.get(code=form.cleaned_data['invite_code'])
-			if code_obj.requester:
-				form.cleaned_data['invited_by'] = code_obj.requester.id
-			else:
+			try:
+				# look up who invited them
+				code_obj = InvitationCode.objects.get(code=form.cleaned_data['invite_code'])
+				if code_obj.requester:
+					form.cleaned_data['invited_by'] = code_obj.requester.id
+				else:
+					form.cleaned_data['invited_by'] = None
+			except ObjectDoesNotExist:
 				form.cleaned_data['invited_by'] = None
 			form.cleaned_data['date_joined'] = datetime.now().strftime("%Y-%m-%d %H:%M")
 			form.cleaned_data['last_login'] = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -86,26 +89,27 @@ def create(request):
 			email = request.session.get('email')
 		else:
 			# TODO error
-			raise Exception
-		if not invitecode_valid(invite_code):
-			return HttpResponseRedirect(reverse(home))
-		
+			invite_code = ""
+			email = ""		
 		form = forms.PersonForm(label_suffix="", initial={'invite_code':invite_code, 'email':email})
 	state_select = forms.StateSelect()
 	return render(request, 'create.html', {'form': form, 'state_select': state_select})
 
 
 def shorten_url(url):
-	create_api = 'http://api.bit.ly/shorten'	
-	# based on Bittle's calls
-	data = urllib.urlencode(dict(version="2.0.1", longUrl=url, login=settings.BITLY_LOGIN, apiKey=settings.BITLY_API_KEY, history=1))
-	link = json.loads(urllib2.urlopen(create_api, data=data).read().strip())
+	create_api = 'http://api.bit.ly/shorten'
+	try:
+		# based on Bittle's calls
+		data = urllib.urlencode(dict(version="2.0.1", longUrl=url, login=settings.BITLY_LOGIN, apiKey=settings.BITLY_API_KEY, history=1))
+		link = json.loads(urllib2.urlopen(create_api, data=data).read().strip())
 	
-	if link["errorCode"] == 0 and link["statusCode"] == "OK":
-		results = link["results"][url]
-		return results['shortUrl']
-	else:
-		return False	
+		if link["errorCode"] == 0 and link["statusCode"] == "OK":
+			results = link["results"][url]
+			return results['shortUrl']
+		else:
+			return url
+	finally:
+		return url	
 	
 @login_required
 def invite_friends(request):
