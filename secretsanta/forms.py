@@ -43,7 +43,7 @@ class PersonForm(forms.ModelForm):
 	)
 	date_joined = forms.CharField(widget=forms.HiddenInput(), required=False)
 	last_login = forms.CharField(widget=forms.HiddenInput(), required=False)
-	invite_code = forms.CharField(widget=forms.HiddenInput())
+	invite_code = forms.CharField(widget=forms.HiddenInput(), required=False)
 	invited_by = forms.CharField(widget=forms.HiddenInput(), required=False)
 	
 	def clean_email(self):
