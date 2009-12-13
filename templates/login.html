@@ -8,20 +8,27 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{% include "leftcolumnsanta.html" %}
 
-<form method="post" action="">
-	<ul class="form">
-		<li><label>Email</label></li>
-		<li>{{ form.username }}</li>
-		<li>{{ form.password.label_tag }}</li>
-		<li>{{ form.password }}</li>
-		{{ form.next }}
-		<li><input type="submit" value="Log in" /></li>
-	</ul>
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+<div class="rightcolumn">
+
+	<form method="post" action="">
+		<ul id="loginform" class="biginputs form">
+			<h2><a href="{% url register %}" class="effect">Sign Up</a></h2>	
+			<h2>or Sign In:</h2>			
+			{% if form.errors %}
+			<li>Your username and password didn't match. Please try again.</li>
+			{% endif %}
+			
+			<li><label>Email</label>
+			{{ form.username }}</li>
+			<li><label>Password</label>
+			{{ form.password }}</li>
+			{{ form.next }}
+			<li><input type="submit" value="Log in" /></li>
+		</ul>
+	<input type="hidden" name="next" value="{{ next }}" />
+	</form>
+</div>
 
 {% endblock %}

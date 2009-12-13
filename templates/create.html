@@ -1,70 +1,20 @@
 {% extends "centercolumn.html" %}
 
-{% block extra-head %}
-	<script type="text/javascript" charset="utf-8">
-	
-		function updateStateSelect() {
-			var country = $("#id_country").val().toLowerCase();
-			if (country == "en" || country == "ie" || country == "sc") country = "uk";
-			var stateSelect = $("#id_" + country, "#state-holder");
-			var lastVal = $("#id_state").val();
-			$(".state-select", "#createform").remove();	
-			if (stateSelect.length) {
-				$(stateSelect).clone()
-					.addClass("state-select")
-					.attr("name", "state")
-					.val(lastVal)
-					.insertBefore("#state-placeholder")
-			} else {
-				$("#id_state", "#state-holder")
-					.clone()
-					.insertBefore("#state-placeholder")
-					.addClass("state-select")
-					.val("")
-					.focus()
-			}
-			
-		}
-		$(document).ready(function(){
-			$("<div style='display:none' id='state-placeholder'></div>").insertBefore("#id_state");
-			$("#id_state").appendTo("#state-holder");
-			updateStateSelect();
-			$("#id_country").change(function(){
-				updateStateSelect();
-			})
-			$("#id_first_name").focus();
-		})
-	</script>
-	
-{% endblock %}
-
 {% block columncontent %}
-<div style="text-align:left">
-<h1>Information</h1>
-	This information will only be used to tell your friends where to ship your gift to.
-</div>
-<form method="POST" action="">
-<div class="centercolumn">
-	<ul id="createform" class="form">
-		<li>{{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}</li>
-		<li>{{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}</li>
-		<li>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</li>
-		<li>{{ form.password.label_tag }} {{ form.password }} {{ form.password.errors }}</li>
-		<li>{{ form.street_address_1.label_tag }} {{ form.street_address_1 }} {{ form.street_address_1.errors }}</li>
-		<li>{{ form.street_address_2.label_tag }} {{ form.street_address_2 }} {{ form.street_address_2.errors }}</li>
-		<li>{{ form.zipcode.label_tag }} {{ form.zipcode }} {{ form.zipcode.errors }}</li>
-		<li>{{ form.city.label_tag }} {{ form.city }} {{ form.city.errors }}</li>
-		<li>{{ form.state.label_tag }} {{ form.state }} {{ form.state.errors }}</li>
-		<li>{{ form.country.label_tag }} {{ form.country }} {{ form.country.errors }}</li>
-		{{ form.invite_code }}
-	</ul>
-	<input type="submit" value="Next" />
-</div>
-</form>
 
+<h1>{{action}} a group</h1>
 
-<div id="state-holder" style="display:none" >
-	{{ state_select.as_ul}}
-</div>
+<form method="post" action="">
+	<ul class="biginputs form">
+		{{ form.as_ul}}
+			<li><input type="submit" value="{{action}}" /></li>
+		</ul>
+	</form>
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		$("#id_drawing").datepicker();
+	})
+</script>
 
 {% endblock %}

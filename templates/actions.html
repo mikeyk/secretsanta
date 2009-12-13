@@ -1,8 +1,62 @@
 {% extends "centercolumn.html" %}
 
+
+{% block bodyclass %}{{block.super}} actionpage{% endblock %}
+
 {% block columncontent %}
 	<h1>Hi, {{ user.first_name }}</h1>
-	<p>There are <span class="datecounter">{{ days }}</span> days until we send Secret Santa matches.</p>
+	<div class="interests">
+		Your interests are listed as <span class="list">{{interests}}</span>. <a class="effect" href="{% url interests %}">Edit them?</a>
+		
+	</div>
+	<a class='effect' href="{% url create %}">Create a group</a>
+	{% if owned_groups %}
+		<h2>Groups you own</h2>	
+		{% for group in owned_groups %}
+		<div class="group">
+			<h3>{{ group.name}} (drawing in {{group.get_days}} day{{group.get_days|pluralize}})</h3>
+			<a class="effect" href="{% url editgroup group.id %}">Edit this group</a> | 
+			<a class="effect" href="{% url invite-friends group.id %}">Invite more friends</a> |
+			<a class="effect" href="{% url edit-members group.id %}">Edit {{group.members.all|length}} group member{{group.members.all|pluralize}}</a> | <a class="effect deletegroup" group_id="{{group.id}}" href="#">Delete this group</a>		
+		</div>
+		{% endfor %}
+	{% endif %}	
 
-	<a href="{% url invite-friends %}">Invite more friends</a>
+	{% if joined_groups %}
+
+		<h2>Groups you're a part of</h2>
+		{% for group in joined_groups %}
+		<div class="group">
+			<h3>{{ group.name}} (drawing in {{group.get_days}} day{{group.get_days|pluralize}})</h3>
+			<a class="effect" href="{% url invite-friends group.id %}">Invite more friends</a>
+		</div>
+		{% endfor %}
+		
+	{% endif %}
+	
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function(){
+			$(".deletegroup").click(function(){
+				var sure = confirm("Are you sure? This action cannot be undone.");
+				if (sure) {
+					var self = this;
+					$.post("{% url delete-group -1 %}".replace("-1", $(this).attr("group_id")),
+						function(response) {
+							if (response.stat == 'ok') {
+								$(self).parent().remove();								
+							} else {
+								// TODO feedback
+							}
+						}
+					)
+				}
+				return false;
+			})
+		})
+	</script>
+	
+	
+	{# <p>There are <span class="datecounter">{{ days }}</span> days until we send Secret Santa matches.</p> #}
+
+	{# <a class="effect" href="{% url invite-friends %}">Invite more friends</a> #}
 {% endblock %}

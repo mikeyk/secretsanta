@@ -1,13 +1,31 @@
 {% extends "centercolumn.html" %}
 
-{% block columncontent %}
+{% block bodyclass %}invitefriends{% endblock %}
+
+{% block content %}
 	<div class="alignleft">
-		<h1>Invite your friends!</h1>
-	<p>
-		<a target="_blank" href="http://twitter.com/?status={{ tweet }}">tweet this to your followers</a>
-	</p>
-	<p>
-		{# TODO fix goofy red crap #}
-<a name="fb_share" type="button" share_url="{{ fb_link }}" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script> on Facebook	
+		<h1>Time to invite your friends to &ldquo;{{group.name}}&rdquo;!</h1>
+		<p>
+			Your invitation code is <span class="invite-code">{{ invite_code }}</span>. Just let your friends know that when they sign up and you'll be good to go. You can also give them this link: <a class="effect" href="{{short_url}}">{{ short_url }}</a>.
+		</p>
+		<p>When you're done inviting, you can go <a class="effect" href="{% url actions %}">back to your home page</a>.
+		<p class="tip">
+			Tip: Secret Santa will exchange presents only with those who you invite. So invite people who all know each other; you can get a new invite if you want to do separate groups.
+		</p>
+		<ul class="invite-targets">
+			<li>
+				<img class="invite-pic" src="{{ MEDIA_URL }}images/invite-email.png"><br/>
+				<a class="effect" href="{{ mailto }}">Invite via Email</a>
+			</li>
+			<li>
+				<img class="invite-pic" src="{{ MEDIA_URL }}images/invite-facebook.png"><br/>
+				<a name="fb_share" type="button" share_url="{{ fb_link }}" href="http://www.facebook.com/sharer.php">Share on Facebook</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+			</li>
+			<li>
+				<img class="invite-pic" src="{{ MEDIA_URL }}images/invite-twitter.png"><br/>
+				<a class="effect" target="_blank" href="http://twitter.com/?status={{ tweet }}">Invite via Twitter</a>
+			</li>			
+		</ul>
+		
 	</div>
 {% endblock %}
