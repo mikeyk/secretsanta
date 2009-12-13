@@ -1,0 +1,23 @@
+{% extends "centercolumn.html" %}
+
+
+{% block columncontent %}
+<h1>Group Members</h1>
+	<a class="effect" href="{% url actions %}">back home</a>
+	<div class="member">You, plus:</div>
+	{% for member in members %}
+		<div class="member"><a class="effect kickout" member="{{member.username}}" href="#">kick out?</a> <span class="name">{{ member }}</span> (<span class="email">{{member.email }}</span>)</div>
+	{% endfor %}
+	
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		$(".kickout").click(function(){
+			var url = '{% url delete-member group.id,"replaceme" %}'.replace("replaceme", $(this).attr("member"));
+			var self = this;
+			$.post(url, function(){
+				$(self).parent().remove();
+			})
+		})
+	})
+</script>
+{% endblock %}

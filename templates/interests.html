@@ -1,0 +1,14 @@
+{% extends "centercolumn.html" %}
+
+{% block columncontent %}
+
+<h1>Your interests</h1>
+
+<form method="post" action="?next={{next}}">
+	<ul class="biginputs form">
+		{{ form.as_ul}}
+			<li><input type="submit" value="Save" /></li>
+		</ul>
+	</form>
+
+{% endblock %}
