@@ -7,6 +7,8 @@ ul.errorlist {
 	list-style: none;
 }
 
+
+
 input[type=submit] {
 	border: 1px solid black;
 	background-color: #ab001b;
@@ -39,7 +41,7 @@ input[type=submit] {
 body {
 	background: #f5f5f5;
 	font-family: Verdana;
-	padding-top: 40px;
+	padding-top: 15px;
 }
 
 h2 {
@@ -47,19 +49,22 @@ h2 {
 	color: #AAA;
 }
 
-a {
+a.effect {
 	color: #be0007;
 	padding: 3px;
+	margin-left: -2px;
 	-webkit-transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-a:hover{
+
+a.effect:hover{
 	background-color: #be0007;
 	color: white;
 	text-decoration: none;
 }
 
 a.noeffect {
+	padding: 0px;
 	-webkit-transition: none;
 }
 
@@ -75,7 +80,7 @@ ul.form {
 	color: #d3062d;		
 }
 
-ul.biginputs input[type=text]{
+ul.biginputs input[type=text], ul.biginputs input[type=password]{
 	width: 270px;
 	height: 30px;
 	font-size: 110%;
@@ -89,6 +94,7 @@ label {
 	font-size: 80%;
 	margin-bottom: 5px;
 	color: #3F3F3F;
+	margin-top: 5px;
 }
 
 
@@ -96,14 +102,22 @@ label {
 
 /* @group base.html styles */
 
+div.logo {
 
+	width: 890px;
+	margin: 0px auto;
+	text-align: center;
+}
 
 .login-header {
+	color: #888;
+	margin: 0px auto;
+	text-align: center;
 	font-size: 80%;
-	width: 890px;
+	width: 50px;
+	right: 44px;
+	top: 80px;
 	padding: 0px;
-	margin: 0px auto 0px auto;
-	text-align: right;
 }
 
 #content {
@@ -151,6 +165,11 @@ label {
 
 .centercolumn {
 	width: 420px;
+	margin: 0px auto;
+}
+
+.thin .hole {
+	width: 20px;
 	margin: 0px auto;
 }
 
@@ -205,18 +224,25 @@ label {
 	text-align: center;
 }
 
+.rightcolumn h2 {
+	text-align: left;
+	font-size: 120%;
+}
+
+
+
 
 /* @end */
 
 
-/* @group Create Form */
+/* @group register Form */
 
-ul#createform {
+ul#registerform {
 	list-style-type: none;
 	padding-left: 0px;		
 }
 
-ul#createform input[type=text], ul#createform input[type=password] {
+ul#registerform input[type=text], ul#registerform input[type=password] {
 	width: 270px;
 	height: 15px;
 	font-size: 100%;
@@ -225,17 +251,17 @@ ul#createform input[type=text], ul#createform input[type=password] {
 	padding: 5px;
 }
 
-ul#createform li {
+ul#registerform li {
 	margin-bottom: 10px;
 }
 
-ul#createform li ul.errorlist {
+ul#registerform li ul.errorlist {
 	list-style-type: none;
 	padding-left: 0px;
 	font-size: 90%;
 }
 
-ul#createform li ul.errorlist li {
+ul#registerform li ul.errorlist li {
 	padding-left: 0px;
 }
 
@@ -250,7 +276,7 @@ ul#createform li ul.errorlist li {
 	top: 75px;
 }
 
-ul#startform li {
+ul#startform, ul#loginform li {
 	margin-bottom: 30px;
 }
 
@@ -262,6 +288,12 @@ ul#startform {
 	margin-top: -90px;
 }
 
+ul#loginform {
+	position: absolute;
+	top: 50%;
+	margin-top: -160px;	
+}
+
 
 
 /* @end */
@@ -269,8 +301,25 @@ ul#startform {
 
 /* @group Actions page */
 
+.actionpage h2 {
+	font-size: 120%;
+}
+
+.actionpage h3 {
+	font-size: 110%;
+	color: #888;
+	margin-bottom: 5px;
+}
 
 .datecounter {
+	font-weight: bold;
+}
+
+.interests {
+	margin-bottom: 20px;
+}
+
+.interests .list {
 	font-weight: bold;
 }
 
@@ -397,3 +446,81 @@ ul.products li {
 
 
 /* @end */
+
+/* @group Invite Page */
+
+
+.invitefriends h1 {
+	font-family: Georgia;
+	font-weight: normal;
+	color: #d40022;
+	margin-bottom: 5px;
+}
+
+ul.invite-targets {
+	margin: 40px auto;
+	width: 600px;
+	list-style-type: none;
+}
+
+ul.invite-targets li {
+	width: 200px;
+	float: left;
+	
+}
+
+.tip {
+	color: #777;
+	font-size: 90%;
+	font-style: italic;
+}
+
+.invite-code {
+	color: #d40022;
+}
+
+ul.invite-targets img {
+	margin-bottom: 40px;
+	
+}
+
+
+
+/* @end */
+
+/* @group Edit members */
+
+.member {
+	font-size: 100%;
+	margin-top: 18px;
+	clear: both;
+}
+
+.member .name {
+	font-weight: bold;
+}
+
+.kickout {
+	float: right;
+	margin-top: -4px;
+}
+
+.member .email {
+	color: #333;
+}
+
+
+
+/* @end */
+
+
+
+
+
+
+
+
+
+
+
+
