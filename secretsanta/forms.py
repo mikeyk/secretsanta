@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 import models
+from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.localflavor.us.forms import USStateSelect
 from django.contrib.localflavor.au.forms import AUStateSelect
@@ -18,6 +19,25 @@ class ResendForm(forms.Form):
 	notrobot = forms.CharField(required=True)
 	wordindex = forms.CharField(widget=forms.HiddenInput(), required=True)
 
+
+class GroupForm(forms.ModelForm):
+
+	drawing = forms.DateField(label="Drawing date")
+	
+	def clean_drawing(self):
+		if self.cleaned_data['drawing'] != self.instance.get_drawing():
+			now = date.today()
+			delta = self.cleaned_data['drawing'] - now
+			if delta.days < 0:
+				raise forms.ValidationError("Please choose a time in the future")
+			elif delta.days < 3:
+				raise forms.ValidationError("Please pick a day at least 3 days from now")
+		return self.cleaned_data['drawing']
+
+	class Meta:
+		model = models.Group
+		fields = ('name','drawing')
+
 class RequestForm(forms.Form):
 	email = forms.EmailField(required=True)
 	
@@ -27,6 +47,14 @@ class StateSelect(forms.Form):
 	br = forms.CharField(widget=BRStateSelect())
 	ca = forms.CharField(widget=CAProvinceSelect())
 	uk = forms.CharField(widget=UKCountySelect())	
+	
+class InterestForm(forms.ModelForm):
+	
+	interest_1 = forms.CharField(initial="handkerchief")
+	
+	class Meta:
+		model = models.Interests
+		fields = ('interest_1', 'interest_2', 'interest_3')		
 
 class PersonForm(forms.ModelForm):
 	

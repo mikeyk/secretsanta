@@ -24,7 +24,7 @@ import random
 import forms
 import strings
 import simplejson as json
-from models import Person, InvitationCode
+from models import Person, InvitationCode, Interests, Group
 from invitecode import generate_code
 
 def path_processor(request):
@@ -34,9 +34,48 @@ def render(request, template_name, context={}):
 	template = get_template(template_name)
 	context = RequestContext(request, context, [path_processor])
 	return HttpResponse(template.render(context))
+	
+def delete_group(request, group_id):
+	response = {'stat':'fail'}
+	try:
+		try:
+			group = Group.objects.get(id=group_id)
+			if group.owner != request.user:
+				raise ObjectDoesNotExist
+		except ObjectDoesNotExist:
+			response['msg'] = 'not authorized'
+		group.active = False
+		group.save()
+		response['stat'] = 'ok'
+	except Exception, e:
+		response['msg'] = e
+	finally:
+		return HttpResponse(json.dumps(response), content_type='text/javascript')
+	
+
+def join_group(request):
+	invite_code = request.REQUEST.get("i")
+	if not invite_code:
+		pass
+		# TODO error page
+	try:
+		code_obj = InvitationCode.objects.get(code=invite_code)
+		group = Group.objects.get(code=code_obj.id)
+		request.session['invite_code'] = invite_code		
+	except ObjectDoesNotExist:
+		# TODO error
+		pass
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect(reverse(login))
+	if request.user not in group.members.all():
+		print "adding to group"
+		group.members.add(request.user)
+		group.save()
+	return HttpResponseRedirect(reverse('actions'))
+	
 
 def login(request):
-	
+	print request.session.get("invite_code")
 	if request.method == "POST":
 		form = forms.LoginForm(data=request.POST)
 		if form.is_valid():
@@ -48,23 +87,14 @@ def login(request):
 				form.errors['_all'] = "NOOOO"
 	else:
 		form = forms.LoginForm()
-	return render(request, 'login.html', {'form': form})
+	return render(request, 'login.html', {'next':next, 'form': form})
 
-def create(request):
-	
+def register(request):
+
 	# validate invite code
 	if request.method == "POST":
 		form = forms.PersonForm(data=request.POST)
 		if form.is_valid():
-			try:
-				# look up who invited them
-				code_obj = InvitationCode.objects.get(code=form.cleaned_data['invite_code'])
-				if code_obj.requester:
-					form.cleaned_data['invited_by'] = code_obj.requester.id
-				else:
-					form.cleaned_data['invited_by'] = None
-			except ObjectDoesNotExist:
-				form.cleaned_data['invited_by'] = None
 			form.cleaned_data['date_joined'] = datetime.now().strftime("%Y-%m-%d %H:%M")
 			form.cleaned_data['last_login'] = datetime.now().strftime("%Y-%m-%d %H:%M")
 			form.cleaned_data['username'] = form.cleaned_data['email']
@@ -79,22 +109,61 @@ def create(request):
 			do_login(request, user)
 		
 			request.session['person'] = person
-			return HttpResponseRedirect(reverse(invite_friends))
+			return HttpResponseRedirect(reverse(add_interests))
 	else:
-		if request.GET.get("i"):
-			invite_code = request.GET['i']
-			email = ""
-		elif request.session.get('invite_code'):
-			invite_code = request.session['invite_code']
-			email = request.session.get('email')
-		else:
-			# TODO error
-			invite_code = ""
-			email = ""		
-		form = forms.PersonForm(label_suffix="", initial={'invite_code':invite_code, 'email':email})
+		form = forms.PersonForm(label_suffix="")
 	state_select = forms.StateSelect()
-	return render(request, 'create.html', {'form': form, 'state_select': state_select})
+	return render(request, 'register.html', {'form': form, 'state_select': state_select})
 
+@login_required
+def edit_members(request, group_id):
+	try:
+		group = Group.objects.get(id=group_id)
+		if group.owner != request.user:
+			raise ObjectDoesNotExist
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect(reverse(actions))
+	return render(request, 'members.html', {'members':group.members.exclude(username=request.user.username), 'group':group})
+	
+@login_required
+def delete_member(request, group_id, member_name):
+	
+	json_response = {'stat':'fail'}
+	try:
+		group = Group.objects.get(id=group_id)
+		if group.owner != request.user:
+			raise ObjectDoesNotExist
+		user = Person.objects.get(username=member_name)
+		group.members.remove(user)
+		group.save()
+		json_response['stat'] = 'ok'
+	finally:
+		return HttpResponse(json.dumps(json_response))
+	
+
+
+@login_required
+def add_interests(request):
+	try:
+		interest = Interests.objects.get(person=request.user)
+	except ObjectDoesNotExist:
+		sample = random.choice(['bandanna', 'australia', 'guitar', 'coffee'])
+		interest = Interests(interest_1=sample, person=request.user)
+	
+	if request.method == "POST":
+		form = forms.InterestForm(data=request.POST, instance=interest)
+		if form.is_valid():
+			interest = form.save()
+			if request.session.get('completed', False) == True:
+				return HttpResponseRedirect(reverse(actions))
+			if not request.session.get('invite_code'):
+				return HttpResponseRedirect(reverse(group))
+			next = reverse('join-group') + "?i=%s" % (request.session['invite_code'])
+			del request.session['invite_code']
+			return HttpResponseRedirect(next)
+	else:
+		form = forms.InterestForm(label_suffix="", instance=interest)
+	return render(request, 'interests.html', {'form': form})
 
 def shorten_url(url):
 	create_api = 'http://api.bit.ly/shorten'
@@ -102,21 +171,35 @@ def shorten_url(url):
 		# based on Bittle's calls
 		data = urllib.urlencode(dict(version="2.0.1", longUrl=url, login=settings.BITLY_LOGIN, apiKey=settings.BITLY_API_KEY, history=1))
 		link = json.loads(urllib2.urlopen(create_api, data=data).read().strip())
-	
+		
 		if link["errorCode"] == 0 and link["statusCode"] == "OK":
 			results = link["results"][url]
-			return results['shortUrl']
-		else:
-			return url
+			url = results['shortUrl']
 	finally:
-		return url	
+		return url
 	
 @login_required
-def invite_friends(request):
+def invite_friends(request, group_id):
 	# first check if they already have a generated invite_code
 	try:
-		invite = InvitationCode.objects.get(requester=request.user)
+		group = Group.objects.get(id=group_id)
+		invite = group.code
+		if not invite:
+			pass # TODO FIXXXX
+		url = "http://%s?i=%s" % (request.get_host(), invite.code)
+		short_url = shorten_url(url)
+		if not short_url: short_url = url
+		tweet = "Hey Followers, I'd like to invite you to join me in a secret santa. Sign up here: %s" % short_url
+		mailto_params = [("subject","Secret Santa"), ("body","Hey there, I'd like to invite you to join me in a secret santa. Sign up here: %s" % short_url)]	
+		mailto = "mailto:?" + "&".join("%s=%s" % (k,v) for k,v in mailto_params)
+
+		fb_link = url
+		return render(request, 'invitefriends.html', {'tweet': tweet, 'short_url': short_url, 'group': group, 'invite_code': invite.code, 'mailto':mailto, 'fb_link': fb_link})		
+		
 	except ObjectDoesNotExist:
+		# TODO ERRRRORRRRRZZ
+		
+		
 		# TODO final string
 		invite = InvitationCode()
 		invite.requester = request.user
@@ -131,12 +214,6 @@ def invite_friends(request):
 			invite.code = generate_code(3)
 			invite.save()		
 	
-	url = "http://santa.com?i=%s" % invite.code
-	short_url = shorten_url(url)
-	if not short_url: short_url = url
-	tweet = "Join my Secret Santa group at %s" % short_url
-	fb_link = url
-	return render(request, 'invitefriends.html', {'tweet': tweet, 'fb_link': fb_link})
 	
 def confirm_request(request):
 	if request.method == "POST":
@@ -177,7 +254,7 @@ def resend_invite(request):
 			index = int(form.cleaned_data['wordindex'])
 			if words[index] == form.cleaned_data['notrobot']:
 				email_lookup = InvitationCode.objects.get(email=request.session['email'], requester=None)
-				url = "http://%s/create?i=%s" % (request.get_host(), email_lookup.code)
+				url = "http://%s/joingroup?i=%s" % (request.get_host(), email_lookup.code)
 				send_mail(strings.REQUEST_INVITE_SUBJECT, strings.REQUEST_INVITE_MESSAGE % (email_lookup.code, url), settings.FROM_EMAIL,
 				    [request.session['email']], fail_silently=False)
 				return HttpResponseRedirect(reverse(confirm_request))
@@ -193,6 +270,47 @@ def resend_invite(request):
 	
 	return render(request, 'resendinvite.html', {'word': word, 'form': form})	
 	
+@login_required
+def group(request, group_id=-1):
+	
+	group = None
+	action = "Create"
+	if group_id:
+		try:
+			group = Group.objects.get(id=group_id)
+			if group.owner != request.user:
+				raise ObjectDoesNotExist
+			action = "Edit"
+		except ObjectDoesNotExist:
+			pass
+	if not group:
+		group = Group(owner=request.user)
+	
+	if request.method == "POST":
+		form = forms.GroupForm(data=request.POST, instance=group)
+		if form.is_valid():
+			group = form.save(commit=False)
+			is_new = False
+			if not group.code: # this is a new group
+				is_new = True
+				invite_code = generate_code(3)
+				code_obj = InvitationCode()
+				code_obj.code = invite_code
+				code_obj.email = request.user.email
+				code_obj.save()
+				group.code = code_obj
+			group.save()
+			if request.user not in group.members.all():
+				group.members.add(request.user)
+				group.save()
+			if is_new:
+				return HttpResponseRedirect(reverse('invite-friends', args=(group.id,)))
+			else:
+				return HttpResponseRedirect(reverse(actions))
+	else:
+		form = forms.GroupForm(label_suffix="", instance=group)
+	return render(request, 'create.html', {'form': form, 'action':action})
+	
 def request_invite(request):
 	
 	if request.method == "POST":
@@ -204,15 +322,11 @@ def request_invite(request):
 				request.session['email'] = email				
 				return HttpResponseRedirect(reverse(resend_invite))
 			except ObjectDoesNotExist:
-				invite_code = generate_code(3)
-				code_obj = InvitationCode()
-				code_obj.code = invite_code
-				code_obj.email = form.cleaned_data['email']
-				code_obj.save()
+
 				
-				# TODO don't hardcode 'create'
+				# TODO don't hardcode 'register'
 				host = request.get_host()
-				url = "http://%s/create?i=%s" % (host, code_obj.code)
+				url = "http://%s/joingroup?i=%s" % (host, code_obj.code)
 				
 				send_mail(strings.REQUEST_INVITE_SUBJECT, strings.REQUEST_INVITE_MESSAGE % (code_obj.code, url), settings.FROM_EMAIL,
 				    [request.session['email']], fail_silently=False)
@@ -233,9 +347,13 @@ def invitecode_valid(invite_code):
 
 @login_required	
 def actions(request):
+	request.session['completed'] = True
 	# when we drawing will be
-	num_days = abs(date.today() - date(2009, 12, settings.DRAWING_DAY)).days
-	return render(request, 'actions.html', {'days': num_days})
+	# num_days = abs(date.today() - date(2009, 12, settings.DRAWING_DAY)).days
+	interests = Interests.objects.get(person=request.user)
+	owned_groups = Group.objects.filter(owner=request.user, active=True)
+	joined_groups = request.user.group_set.filter(active=True).exclude(owner=request.user)
+	return render(request, 'actions.html', {'owned_groups':owned_groups, 'interests': ", ".join(interests.all_interests()), 'joined_groups': joined_groups})
 	
 def home(request):
 	if request.user.is_authenticated():
